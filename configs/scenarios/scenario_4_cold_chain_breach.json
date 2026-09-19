@@ -1,0 +1,22 @@
+{
+  "scenario_id": "SCENARIO_4_COLD_CHAIN_BREACH",
+  "title": "Scenario 4: Temperature-Sensitive Cargo Breach",
+  "description": "Biological ice-core sample container (CRG-BIO-01) experiences an active refrigeration power failure during field transit. Thermal insulation degradation causes temperature drift past the permitted -15 C upper bound or -25 C lower bound, triggering automated cold-chain warning and breach alerts.",
+  "random_seed": 42,
+  "duration_ticks": 60,
+  "minutes_per_tick": 1,
+  "events": [
+    {
+      "tick": 5,
+      "type": "DISPATCH_SUPPLY_CONVOY",
+      "vehicle_id": "VEH-01-SNOWCAT",
+      "route_id": "ROUTE-BASE-ZULU"
+    },
+    {
+      "tick": 12,
+      "type": "CARGO_COOLER_FAILURE",
+      "cargo_id": "CRG-BIO-01",
+      "reason": "Compressor electrical fault on vehicle auxiliary generator"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "scenario_id": "SCENARIO_3_EMERGENCY_SAR",
+  "title": "Scenario 3: Field Personnel Emergency & SAR Response",
+  "description": "Distress beacon detected from Crevasse Field C-3. Simulation triggers Automatic Muster Roll-Call (accounting for 23/25 personnel), discovers 2 unconfirmed field scientists, performs Multi-Attribute SAR Decision Support, generates an emergency route, and dispatches the optimal response asset.",
+  "random_seed": 42,
+  "duration_ticks": 60,
+  "minutes_per_tick": 1,
+  "events": [
+    {
+      "tick": 10,
+      "type": "TRIGGER_EMERGENCY",
+      "emergency": {
+        "id": "EMG-2026-SAR-01",
+        "incident_type": "CREVASSE_FALL_AND_INJURY",
+        "location": [-69.9500, 39.7000],
+        "nearest_landmark": "Crevasse Field C-3 (Sector 4)",
+        "severity": "CRITICAL",
+        "affected_personnel_ids": ["PERS-003", "PERS-004"],
+        "required_capabilities": ["MEDICAL_TRANSPORT", "AERIAL", "RAPID_RESPONSE"]
+      }
+    }
+  ]
+}

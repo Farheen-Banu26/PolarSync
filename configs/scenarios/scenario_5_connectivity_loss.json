@@ -1,0 +1,26 @@
+{
+  "scenario_id": "SCENARIO_5_CONNECTIVITY_LOSS",
+  "title": "Scenario 5: Satellite Blackout & Store-and-Forward Sync",
+  "description": "Geomagnetic solar storm severs central satellite communications at Tick 10. Operations, telemetry generation, and vehicle travel continue in offline store-and-forward mode. At Tick 40, link is restored, triggering central synchronization and queue reconciliation.",
+  "random_seed": 42,
+  "duration_ticks": 60,
+  "minutes_per_tick": 1,
+  "events": [
+    {
+      "tick": 5,
+      "type": "DISPATCH_SUPPLY_CONVOY",
+      "vehicle_id": "VEH-01-SNOWCAT",
+      "route_id": "ROUTE-BASE-ALPHA"
+    },
+    {
+      "tick": 10,
+      "type": "NETWORK_SEVERED",
+      "reason": "Geomagnetic solar flare ionospheric disruption"
+    },
+    {
+      "tick": 40,
+      "type": "NETWORK_RESTORED",
+      "reason": "Satellite lock re-acquired on backup transponder"
+    }
+  ]
+}

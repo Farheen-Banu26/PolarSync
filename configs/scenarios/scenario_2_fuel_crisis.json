@@ -1,0 +1,24 @@
+{
+  "scenario_id": "SCENARIO_2_FUEL_CRISIS",
+  "title": "Scenario 2: Polar Fuel Shortage Crisis",
+  "description": "Severe sub-zero storm forces primary base generators and auxiliary heaters to run at 3.5x consumption rate. Days of Autonomy rapidly drop below the next resupply window, generating a CRITICAL resupply risk alert and degrading expedition readiness.",
+  "random_seed": 42,
+  "duration_ticks": 60,
+  "minutes_per_tick": 1,
+  "events": [
+    {
+      "tick": 10,
+      "type": "FUEL_CONSUMPTION_SPIKE",
+      "location_id": "BASE-MAITRI",
+      "new_daily_rate": 2200.0,
+      "reason": "Extreme blizzard - auxiliary thermal generators engaged at max load"
+    },
+    {
+      "tick": 15,
+      "type": "FUEL_LEAK_EVENT",
+      "location_id": "BASE-MAITRI",
+      "loss_liters": 7000.0,
+      "reason": "Sub-zero manifold rupture in secondary fuel bladder"
+    }
+  ]
+}

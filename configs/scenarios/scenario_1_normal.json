@@ -1,0 +1,24 @@
+{
+  "scenario_id": "SCENARIO_1_NORMAL",
+  "title": "Scenario 1: Normal Expedition Operations",
+  "description": "Demonstrates routine polar operations with nominal vehicle transit, check-in heartbeats, cargo loading, and steady-state inventory burn.",
+  "random_seed": 42,
+  "duration_ticks": 60,
+  "minutes_per_tick": 1,
+  "events": [
+    {
+      "tick": 5,
+      "type": "DISPATCH_SUPPLY_CONVOY",
+      "vehicle_id": "VEH-01-SNOWCAT",
+      "route_id": "ROUTE-BASE-ALPHA",
+      "assigned_personnel_ids": ["PERS-008"]
+    },
+    {
+      "tick": 20,
+      "type": "DISPATCH_PATROL",
+      "vehicle_id": "SKIDOO-01",
+      "route_id": "ROUTE-BASE-ALPHA",
+      "assigned_personnel_ids": ["PERS-019"]
+    }
+  ]
+}

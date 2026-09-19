@@ -1,0 +1,325 @@
+{
+  "environment": {
+    "locations": [
+      {
+        "id": "BASE-MAITRI",
+        "name": "Maitri-II Main Polar Base",
+        "location_type": "RESEARCH_BASE",
+        "coordinates": [-69.7500, 39.5800],
+        "elevation_m": 120.0,
+        "facilities": ["HELIPAD", "MEDICAL_BAY", "CENTRAL_DEPOT", "COMM_TOWER"]
+      },
+      {
+        "id": "CAMP-ALPHA",
+        "name": "Camp Alpha - Schirmacher Oasis",
+        "location_type": "EXPEDITION_CAMP",
+        "coordinates": [-69.7800, 39.6500],
+        "elevation_m": 140.0,
+        "facilities": ["SURVEY_LAB", "REFUEL_STATION"]
+      },
+      {
+        "id": "CAMP-ZULU",
+        "name": "Field Camp Zulu - Deep Ice Sheet",
+        "location_type": "FIELD_CAMP",
+        "coordinates": [-70.1200, 39.8500],
+        "elevation_m": 450.0,
+        "facilities": ["ICE_CORE_DRILL", "SHELTER_DOME"]
+      },
+      {
+        "id": "CAMP-BRAVO",
+        "name": "Field Camp Bravo - Nunatak Ridge",
+        "location_type": "FIELD_CAMP",
+        "coordinates": [-69.9000, 39.4000],
+        "elevation_m": 310.0,
+        "facilities": ["SEISMIC_ARRAY", "EMERGENCY_DEPOT"]
+      },
+      {
+        "id": "EVAC-STATION",
+        "name": "Emergency Station Oscar",
+        "location_type": "EMERGENCY_STATION",
+        "coordinates": [-69.7600, 39.6000],
+        "elevation_m": 130.0,
+        "facilities": ["AIR_AMBULANCE_BAY", "CRITICAL_CARE"]
+      }
+    ],
+    "danger_zones": [
+      {
+        "id": "DZ-CREVASSE-C3",
+        "name": "Crevasse Field C-3",
+        "zone_type": "CREVASSE_FIELD",
+        "center_coordinates": [-69.9500, 39.7000],
+        "radius_km": 6.5,
+        "severity": "EXTREME",
+        "passable_by_air_only": true
+      },
+      {
+        "id": "DZ-BLIZZARD-PASS",
+        "name": "Blizzard Corridor Whiteout Ridge",
+        "zone_type": "BLIZZARD_CORRIDOR",
+        "center_coordinates": [-70.0200, 39.5500],
+        "radius_km": 8.0,
+        "severity": "MODERATE",
+        "passable_by_air_only": false
+      }
+    ],
+    "routes": [
+      {
+        "id": "ROUTE-BASE-ALPHA",
+        "name": "Main Base to Camp Alpha Supply Line",
+        "origin_id": "BASE-MAITRI",
+        "destination_id": "CAMP-ALPHA",
+        "waypoints": [
+          [-69.7500, 39.5800],
+          [-69.7650, 39.6100],
+          [-69.7800, 39.6500]
+        ],
+        "distance_km": 6.2,
+        "terrain_difficulty": 1.0
+      },
+      {
+        "id": "ROUTE-BASE-ZULU",
+        "name": "Base to Field Camp Zulu Deep Traverse",
+        "origin_id": "BASE-MAITRI",
+        "destination_id": "CAMP-ZULU",
+        "waypoints": [
+          [-69.7500, 39.5800],
+          [-69.8300, 39.6400],
+          [-69.9200, 39.7500],
+          [-70.0500, 39.8000],
+          [-70.1200, 39.8500]
+        ],
+        "distance_km": 44.5,
+        "terrain_difficulty": 1.4
+      },
+      {
+        "id": "ROUTE-BASE-BRAVO",
+        "name": "Base to Nunatak Survey Route",
+        "origin_id": "BASE-MAITRI",
+        "destination_id": "CAMP-BRAVO",
+        "waypoints": [
+          [-69.7500, 39.5800],
+          [-69.8100, 39.5000],
+          [-69.9000, 39.4000]
+        ],
+        "distance_km": 19.8,
+        "terrain_difficulty": 1.2
+      }
+    ]
+  },
+  "vehicles": [
+    {
+      "id": "HELI-01",
+      "name": "Bell-412 Polar Air",
+      "vehicle_type": "HELICOPTER",
+      "position": [-69.7500, 39.5800],
+      "speed_kmh": 0.0,
+      "heading_deg": 0.0,
+      "fuel_level_l": 650.0,
+      "fuel_capacity_l": 700.0,
+      "fuel_burn_rate_l_per_km": 1.8,
+      "battery_level_pct": 100.0,
+      "engine_temp_c": 20.0,
+      "status": "AVAILABLE",
+      "capabilities": ["AERIAL", "RAPID_RESPONSE", "MEDICAL_TRANSPORT", "LONG_RANGE"],
+      "max_range_km": 500.0,
+      "passenger_capacity": 6,
+      "connectivity": "ONLINE"
+    },
+    {
+      "id": "VEH-01-SNOWCAT",
+      "name": "Snowcat Med-Evac Alpha",
+      "vehicle_type": "SNOWCAT",
+      "position": [-69.7500, 39.5800],
+      "speed_kmh": 0.0,
+      "heading_deg": 0.0,
+      "fuel_level_l": 240.0,
+      "fuel_capacity_l": 250.0,
+      "fuel_burn_rate_l_per_km": 0.85,
+      "battery_level_pct": 100.0,
+      "engine_temp_c": 20.0,
+      "status": "AVAILABLE",
+      "capabilities": ["MEDICAL_TRANSPORT", "ALL_TERRAIN"],
+      "max_range_km": 250.0,
+      "passenger_capacity": 4,
+      "connectivity": "ONLINE"
+    },
+    {
+      "id": "VEH-02-SNOWCAT",
+      "name": "Snowcat Heavy Hauler",
+      "vehicle_type": "SNOWCAT",
+      "position": [-69.7500, 39.5800],
+      "speed_kmh": 0.0,
+      "heading_deg": 0.0,
+      "fuel_level_l": 250.0,
+      "fuel_capacity_l": 250.0,
+      "fuel_burn_rate_l_per_km": 0.95,
+      "battery_level_pct": 100.0,
+      "engine_temp_c": 20.0,
+      "status": "AVAILABLE",
+      "capabilities": ["HEAVY_CARGO", "ALL_TERRAIN"],
+      "max_range_km": 240.0,
+      "passenger_capacity": 3,
+      "connectivity": "ONLINE"
+    },
+    {
+      "id": "SKIDOO-01",
+      "name": "Polar Skidoo Recon-1",
+      "vehicle_type": "SKIDOO",
+      "position": [-69.7800, 39.6500],
+      "speed_kmh": 0.0,
+      "heading_deg": 0.0,
+      "fuel_level_l": 55.0,
+      "fuel_capacity_l": 60.0,
+      "fuel_burn_rate_l_per_km": 0.35,
+      "battery_level_pct": 98.0,
+      "engine_temp_c": 20.0,
+      "status": "AVAILABLE",
+      "capabilities": ["RAPID_RESPONSE", "ALL_TERRAIN"],
+      "max_range_km": 140.0,
+      "passenger_capacity": 2,
+      "connectivity": "ONLINE"
+    },
+    {
+      "id": "SKIDOO-02",
+      "name": "Polar Skidoo Recon-2",
+      "vehicle_type": "SKIDOO",
+      "position": [-69.7500, 39.5800],
+      "speed_kmh": 0.0,
+      "heading_deg": 0.0,
+      "fuel_level_l": 58.0,
+      "fuel_capacity_l": 60.0,
+      "fuel_burn_rate_l_per_km": 0.35,
+      "battery_level_pct": 99.0,
+      "engine_temp_c": 20.0,
+      "status": "AVAILABLE",
+      "capabilities": ["RAPID_RESPONSE", "ALL_TERRAIN"],
+      "max_range_km": 140.0,
+      "passenger_capacity": 2,
+      "connectivity": "ONLINE"
+    },
+    {
+      "id": "BULLY-01",
+      "name": "PistonBully Heavy Trailmaker",
+      "vehicle_type": "PISTON_BULLY",
+      "position": [-69.7500, 39.5800],
+      "speed_kmh": 0.0,
+      "heading_deg": 0.0,
+      "fuel_level_l": 320.0,
+      "fuel_capacity_l": 350.0,
+      "fuel_burn_rate_l_per_km": 1.4,
+      "battery_level_pct": 100.0,
+      "engine_temp_c": 20.0,
+      "status": "AVAILABLE",
+      "capabilities": ["ALL_TERRAIN", "HEAVY_CARGO"],
+      "max_range_km": 200.0,
+      "passenger_capacity": 2,
+      "connectivity": "ONLINE"
+    }
+  ],
+  "personnel": [
+    {"id": "PERS-001", "name": "Dr. Rajesh Sharma", "role": "STATION_COMMANDER", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-002", "name": "Capt. Anya Hansen", "role": "EXPEDITION_LEADER", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-003", "name": "Dr. Vikram Patel", "role": "FIELD_SCIENTIST", "assigned_location_id": "CAMP-ZULU", "current_position": [-70.1200, 39.8500]},
+    {"id": "PERS-004", "name": "Elena Rostova", "role": "FIELD_SCIENTIST", "assigned_location_id": "CAMP-ZULU", "current_position": [-70.1200, 39.8500]},
+    {"id": "PERS-005", "name": "Dr. Marcus Chen", "role": "MEDIC", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-006", "name": "Sarah O'Connor", "role": "MEDIC", "assigned_location_id": "EVAC-STATION", "current_position": [-69.7600, 39.6000]},
+    {"id": "PERS-007", "name": "Arjun Nair", "role": "LOGISTICS_OFFICER", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-008", "name": "Tariq Mansoor", "role": "VEHICLE_OPERATOR", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-009", "name": "Lars Lindqvist", "role": "VEHICLE_OPERATOR", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-010", "name": "Kavita Rao", "role": "MAINTENANCE_ENGINEER", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-011", "name": "David Miller", "role": "FIELD_SCIENTIST", "assigned_location_id": "CAMP-BRAVO", "current_position": [-69.9000, 39.4000]},
+    {"id": "PERS-012", "name": "Yuki Tanaka", "role": "FIELD_SCIENTIST", "assigned_location_id": "CAMP-BRAVO", "current_position": [-69.9000, 39.4000]},
+    {"id": "PERS-013", "name": "Suresh Menon", "role": "LOGISTICS_OFFICER", "assigned_location_id": "CAMP-ALPHA", "current_position": [-69.7800, 39.6500]},
+    {"id": "PERS-014", "name": "Chloe Dubois", "role": "FIELD_SCIENTIST", "assigned_location_id": "CAMP-ALPHA", "current_position": [-69.7800, 39.6500]},
+    {"id": "PERS-015", "name": "Mateo Rossi", "role": "VEHICLE_OPERATOR", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-016", "name": "Pooja Reddy", "role": "MAINTENANCE_ENGINEER", "assigned_location_id": "CAMP-ZULU", "current_position": [-70.1200, 39.8500]},
+    {"id": "PERS-017", "name": "Nils Berg", "role": "FIELD_SCIENTIST", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-018", "name": "Dr. Fatimah Al-Zahra", "role": "FIELD_SCIENTIST", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-019", "name": "Jin-Woo Park", "role": "VEHICLE_OPERATOR", "assigned_location_id": "CAMP-ALPHA", "current_position": [-69.7800, 39.6500]},
+    {"id": "PERS-020", "name": "Hannah Schmidt", "role": "MEDIC", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-021", "name": "Rahul Verma", "role": "LOGISTICS_OFFICER", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-022", "name": "Ananya Joshi", "role": "FIELD_SCIENTIST", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-023", "name": "Sven Nygard", "role": "MAINTENANCE_ENGINEER", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-024", "name": "Lucas Silva", "role": "FIELD_SCIENTIST", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]},
+    {"id": "PERS-025", "name": "Mei-Ling Zhou", "role": "FIELD_SCIENTIST", "assigned_location_id": "BASE-MAITRI", "current_position": [-69.7500, 39.5800]}
+  ],
+  "inventory": [
+    {
+      "category": "FUEL",
+      "location_id": "BASE-MAITRI",
+      "current_stock": 18000.0,
+      "unit": "LITERS",
+      "daily_consumption_rate": 600.0,
+      "safety_buffer_days": 15.0,
+      "next_resupply_window_days": 14.0
+    },
+    {
+      "category": "FOOD",
+      "location_id": "BASE-MAITRI",
+      "current_stock": 2500.0,
+      "unit": "DAYS_RATION",
+      "daily_consumption_rate": 75.0,
+      "safety_buffer_days": 15.0,
+      "next_resupply_window_days": 14.0
+    },
+    {
+      "category": "MEDICAL_SUPPLIES",
+      "location_id": "BASE-MAITRI",
+      "current_stock": 1200.0,
+      "unit": "UNITS",
+      "daily_consumption_rate": 30.0,
+      "safety_buffer_days": 15.0,
+      "next_resupply_window_days": 14.0
+    },
+    {
+      "category": "OXYGEN",
+      "location_id": "BASE-MAITRI",
+      "current_stock": 450.0,
+      "unit": "CYLINDERS",
+      "daily_consumption_rate": 10.0,
+      "safety_buffer_days": 15.0,
+      "next_resupply_window_days": 14.0
+    },
+    {
+      "category": "SPARE_PARTS",
+      "location_id": "BASE-MAITRI",
+      "current_stock": 800.0,
+      "unit": "UNITS",
+      "daily_consumption_rate": 15.0,
+      "safety_buffer_days": 15.0,
+      "next_resupply_window_days": 14.0
+    }
+  ],
+  "cargo": [
+    {
+      "id": "CRG-BIO-01",
+      "name": "Sub-Ice Microbial Core Samples",
+      "category": "MEDICAL_SAMPLES",
+      "weight_kg": 25.0,
+      "origin_id": "CAMP-ZULU",
+      "destination_id": "BASE-MAITRI",
+      "carrier_vehicle_id": "VEH-01-SNOWCAT",
+      "lifecycle_stage": "LOADED",
+      "is_temperature_sensitive": true,
+      "min_temp_c": -25.0,
+      "max_temp_c": -15.0,
+      "current_temp_c": -20.0,
+      "condition": "NOMINAL"
+    },
+    {
+      "id": "CRG-SEIS-02",
+      "name": "Geothermal Seismic Logger",
+      "category": "SCIENTIFIC_EQUIPMENT",
+      "weight_kg": 120.0,
+      "origin_id": "BASE-MAITRI",
+      "destination_id": "CAMP-BRAVO",
+      "carrier_vehicle_id": "VEH-02-SNOWCAT",
+      "lifecycle_stage": "PACKED",
+      "is_temperature_sensitive": false,
+      "min_temp_c": -40.0,
+      "max_temp_c": 10.0,
+      "current_temp_c": -22.0,
+      "condition": "NOMINAL"
+    }
+  ]
+}
