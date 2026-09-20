@@ -34,12 +34,26 @@ class SimulationService:
     }
 
     def __init__(self, simulator_root: Optional[str] = None):
-        if simulator_root is None:
-            # Default to parent root directory (e:/polar simulator)
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            self.simulator_root = os.path.abspath(os.path.join(current_dir, "..", "..", "..", ".."))
+        if simulator_root is not None:
+            self.simulator_root = os.path.abspath(simulator_root)
+        elif "SIMULATOR_ROOT" in os.environ and os.path.exists(os.environ["SIMULATOR_ROOT"]):
+            self.simulator_root = os.path.abspath(os.environ["SIMULATOR_ROOT"])
         else:
-            self.simulator_root = simulator_root
+            # Candidate paths discovery for local dev & cloud deployment
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            candidates = [
+                os.path.abspath(os.path.join(current_dir, "..", "..", "..", "..")),  # root from backend/app/services
+                os.path.abspath(os.getcwd()),                                        # current working directory
+                os.path.abspath(os.path.join(os.getcwd(), "..")),                    # parent of current working directory
+                os.path.abspath(os.path.join(current_dir, "..", "..", "..")),        # polarsync-platform level
+            ]
+            chosen_root = None
+            for c in candidates:
+                if os.path.exists(os.path.join(c, "configs", "base_environment.json")) and os.path.exists(os.path.join(c, "src")):
+                    chosen_root = c
+                    break
+            
+            self.simulator_root = chosen_root or candidates[0]
 
         # Ensure simulator root is in sys.path so we can import src.scenario_runner
         if self.simulator_root not in sys.path:

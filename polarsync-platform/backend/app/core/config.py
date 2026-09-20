@@ -1,7 +1,6 @@
-"""
-PolarSync Platform - Backend Core Settings
-"""
-from typing import List
+from typing import List, Union, Optional
+import json
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,11 +20,26 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000"
     ]
+
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str):
+            if v.strip().startswith("[") and v.strip().endswith("]"):
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            # Split comma-separated string
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, list):
+            return v
+        return []
     
-    FRONTEND_URL: str = "http://localhost:5175"
+    FRONTEND_URL: Optional[str] = "http://localhost:5175"
     
-    # Database
-    DATABASE_URL: str = "postgresql://polarsync_user:polarsync_pass@localhost:5432/polarsync_db"
+    # Database (Optional for simulation mode)
+    DATABASE_URL: Optional[str] = None
     
     # Secret
     SECRET_KEY: str = "polarsync-sih26062-secret-key-change-in-production"
