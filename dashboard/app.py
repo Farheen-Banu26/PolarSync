@@ -185,7 +185,7 @@ def main():
 
         with col_map:
             fig_map = create_polar_operations_map(sim_data)
-            st.plotly_chart(fig_map, use_container_width=True)
+            st.plotly_chart(fig_map, use_container_width=True,key="operations_map")
 
         with col_fleet:
             st.markdown('<div class="panel-header">🚜 Vehicle Fleet Status & Kinematics</div>', unsafe_allow_html=True)
@@ -217,7 +217,7 @@ def main():
             else:
                 fig_primary = create_speed_telemetry_chart(sim_data["telemetry_df"])
 
-            st.plotly_chart(fig_primary, use_container_width=True)
+            st.plotly_chart(fig_primary, use_container_width=True,key=f"primary_chart_{selected_sc_idx}")
 
     # Tab 2: Inventory & Autonomy
     with tabs[1]:
@@ -226,14 +226,14 @@ def main():
         # Fuel time series chart
         st.markdown("### Fleet Fuel Burn Dynamics")
         fig_fuel = create_fuel_telemetry_chart(sim_data["telemetry_df"])
-        st.plotly_chart(fig_fuel, use_container_width=True)
+        st.plotly_chart(fig_fuel, use_container_width=True,key="fuel_chart")
 
     # Tab 3: Cold-Chain Cargo
     with tabs[2]:
         render_cargo_panel(sim_data)
         st.markdown("### Thermal Bounds & Insulation Profile")
         fig_thermal = create_cargo_thermal_chart(sim_data["cargo_history_df"], sim_data["cargo_df"])
-        st.plotly_chart(fig_thermal, use_container_width=True)
+        st.plotly_chart(fig_thermal, use_container_width=True,key="thermal_chart")
 
     # Tab 4: Personnel Muster
     with tabs[3]:
