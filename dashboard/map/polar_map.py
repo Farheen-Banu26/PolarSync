@@ -176,20 +176,22 @@ def create_polar_operations_map(data: Dict[str, Any]) -> go.Figure:
             showlegend=True
         ))
 
-    # Dark Polar Aesthetic Layout
+    # Dark Polar Aesthetic Layout centered tightly on the operational corridor
     fig.update_layout(
         title=dict(
-            text="<b>POLAR OPERATIONAL THEATRE MAP</b> (Antarctic Sector - Larsemann Hills)",
+            text="<b>POLAR OPERATIONAL THEATRE MAP</b> (Antarctic Sector - Queen Maud Land)",
             font=dict(size=14, color="#38bdf8", family="Inter")
         ),
         xaxis=dict(
             title=dict(text="Longitude (°E)", font=dict(color="#94a3b8")),
+            range=[39.32, 39.92],
             gridcolor="rgba(148, 163, 184, 0.1)",
             zerolinecolor="rgba(148, 163, 184, 0.2)",
             tickfont=dict(color="#94a3b8")
         ),
         yaxis=dict(
             title=dict(text="Latitude (°S)", font=dict(color="#94a3b8")),
+            range=[-70.16, -69.71],
             gridcolor="rgba(148, 163, 184, 0.1)",
             zerolinecolor="rgba(148, 163, 184, 0.2)",
             tickfont=dict(color="#94a3b8")
@@ -212,3 +214,4 @@ def create_polar_operations_map(data: Dict[str, Any]) -> go.Figure:
     )
 
     return fig
+

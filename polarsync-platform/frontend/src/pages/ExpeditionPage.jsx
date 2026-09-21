@@ -111,7 +111,7 @@ export const ExpeditionPage = () => {
               assets={mapData?.assets || []}
               personnel={mapData?.personnel || []}
               emergency={mapData?.emergency || null}
-              height="400px"
+              height="620px"
             />
           </div>
 

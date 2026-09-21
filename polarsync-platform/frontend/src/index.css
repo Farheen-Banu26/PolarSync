@@ -72,7 +72,7 @@ body {
   line-height: 1.4 !important;
 }
 
-/* Custom Div Icon Styles */
+/* Custom Div Icon Styles & Tactical Polar GIS Markers */
 .station-pin {
   display: flex;
   align-items: center;
@@ -106,27 +106,127 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   background: #e11d48;
-  border: 2px solid #fecdd3;
+  border: 2px solid #ffffff;
   border-radius: 50%;
   color: white;
-  animation: pulse-emergency 1.2s infinite;
-  box-shadow: 0 0 20px rgba(225, 29, 72, 0.8);
+  animation: pulse-emergency 1.4s infinite ease-out;
+  box-shadow: 0 0 20px rgba(225, 29, 72, 0.85);
+}
+
+.emergency-radar-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 63, 94, 0.8);
+  animation: radar-expand 1.8s infinite ease-out;
+  pointer-events: none;
 }
 
 @keyframes pulse-emergency {
   0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.7);
+    transform: scale(0.92);
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.8);
   }
-  70% {
-    transform: scale(1.15);
-    box-shadow: 0 0 0 12px rgba(225, 29, 72, 0);
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 16px 4px rgba(225, 29, 72, 0.6);
   }
   100% {
-    transform: scale(0.95);
+    transform: scale(0.92);
     box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
   }
 }
+
+@keyframes radar-expand {
+  0% {
+    width: 28px;
+    height: 28px;
+    opacity: 0.9;
+  }
+  100% {
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
+
+.sar-dispatched-glow {
+  animation: sar-glow-pulse 1.6s infinite ease-in-out;
+}
+
+@keyframes sar-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+    border-color: #f59e0b;
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.95);
+    border-color: #fbbf24;
+  }
+}
+
+/* Tooltip custom overrides for dark GIS command map */
+.leaflet-tooltip-dark {
+  background: rgba(9, 14, 26, 0.96) !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #38bdf888 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  padding: 6px 10px !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.leaflet-tooltip-dark:before {
+  border-top-color: #38bdf888 !important;
+}
+
+/* Popup dark styling for Leaflet */
+.leaflet-popup-content-wrapper {
+  background: rgba(10, 18, 36, 0.96) !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #38bdf866 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.leaflet-popup-tip {
+  background: #0a1224 !important;
+  border: 1px solid #38bdf866 !important;
+}
+
+/* Custom dark styling for Leaflet zoom controls */
+.leaflet-control-zoom {
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: rgba(10, 18, 36, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7) !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background: rgba(10, 18, 36, 0.9) !important;
+  color: #38bdf8 !important;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
+  font-weight: bold !important;
+  font-family: monospace !important;
+  transition: all 0.2s ease !important;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #ffffff !important;
+}
+
+

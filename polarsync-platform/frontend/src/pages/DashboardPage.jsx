@@ -289,18 +289,6 @@ export const DashboardPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             {/* LEFT: Leaflet GIS Command Center Map */}
             <div className="lg:col-span-2 flex flex-col">
-              <div className="flex items-center justify-between pb-3 mb-2">
-                <div className="flex items-center gap-2">
-                  <Compass className="w-4 h-4 text-sky-400" />
-                  <h3 className="text-sm font-bold font-mono text-slate-200 uppercase tracking-wider">
-                    Geospatial Command Map (Antarctica Sector)
-                  </h3>
-                </div>
-                <span className="text-xs font-mono text-slate-500">
-                  {mapData?.assets?.length || 0} Assets • {mapData?.locations?.length || 0} Stations
-                </span>
-              </div>
-
               <PolarMap
                 locations={mapData?.locations || []}
                 dangerZones={mapData?.danger_zones || []}
@@ -308,7 +296,7 @@ export const DashboardPage = () => {
                 assets={mapData?.assets || []}
                 personnel={mapData?.personnel || []}
                 emergency={mapData?.emergency || null}
-                height="530px"
+                height="640px"
               />
             </div>
 
