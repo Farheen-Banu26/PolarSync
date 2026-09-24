@@ -11,6 +11,7 @@ import RiskIndicator from '../components/intelligence/RiskIndicator';
 import ExplanationPanel from '../components/intelligence/ExplanationPanel';
 import RecommendationCard from '../components/intelligence/RecommendationCard';
 import IntelligenceCard from '../components/intelligence/IntelligenceCard';
+import AuditLogViewer from '../components/common/AuditLogViewer';
 import { useScenario } from '../context/ScenarioContext';
 import { getIntelligenceSummary } from '../services/api';
 import {
@@ -477,6 +478,11 @@ export const DashboardPage = () => {
                   </React.Fragment>
                 ))}
               </div>
+            </div>
+
+            {/* Bottom Audit Log Timeline */}
+            <div className="mt-6">
+              <AuditLogViewer limit={15} />
             </div>
           </div>
         </>

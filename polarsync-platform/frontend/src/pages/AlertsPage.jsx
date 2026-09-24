@@ -6,8 +6,8 @@ import LoadingState from '../components/common/LoadingState';
 import ErrorState from '../components/common/ErrorState';
 import CacheIndicator from '../components/common/CacheIndicator';
 import { useScenario } from '../context/ScenarioContext';
-import { getAlerts } from '../services/api';
-import { Bell, AlertTriangle, AlertCircle, Info, ShieldCheck, Filter } from 'lucide-react';
+import { getAlerts, acknowledgeAlert } from '../services/api';
+import { Bell, AlertTriangle, AlertCircle, Info, ShieldCheck, Filter, CheckCircle2 } from 'lucide-react';
 
 export const AlertsPage = () => {
   const { scenarioId, setScenarioId } = useScenario();
@@ -146,12 +146,15 @@ export const AlertsPage = () => {
                       <th className="p-3">Category</th>
                       <th className="p-3">Source Entity</th>
                       <th className="p-3">Message & Operational Diagnostic</th>
+                      <th className="p-3">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {filteredAlerts.map((a) => {
                       const isCritical = a.severity === 'CRITICAL';
                       const isWarning = a.severity === 'WARNING';
+                      const isResolved = a.status === 'RESOLVED';
+                      const isAcked = a.status === 'ACKNOWLEDGED';
 
                       return (
                         <tr key={a.id} className={`transition ${
@@ -172,6 +175,23 @@ export const AlertsPage = () => {
                             <div>{a.message}</div>
                             {a.details && a.details !== a.message && (
                               <div className="text-[11px] text-slate-400 mt-0.5">{String(a.details)}</div>
+                            )}
+                          </td>
+                          <td className="p-3">
+                            {!isResolved && !isAcked ? (
+                              <button
+                                onClick={async () => {
+                                  await acknowledgeAlert(a.id, 'ACKNOWLEDGED');
+                                  fetchAlerts(scenarioId);
+                                }}
+                                className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-[10px] transition cursor-pointer"
+                              >
+                                Acknowledge
+                              </button>
+                            ) : (
+                              <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> {a.status || 'ACK'}
+                              </span>
                             )}
                           </td>
                         </tr>

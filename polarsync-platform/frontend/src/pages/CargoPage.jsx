@@ -230,13 +230,35 @@ export const CargoPage = () => {
                           />
                         </td>
                         <td className="p-3">
-                          <button
-                            onClick={() => handleInspectCargo(c)}
-                            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-[10px] transition cursor-pointer"
-                            title="Inspect cargo manifest"
-                          >
-                            Inspect
-                          </button>
+                          <div className="flex items-center gap-1.5">
+                            {currentStage !== 'DELIVERED' ? (
+                              <button
+                                onClick={async () => {
+                                  const nextStage = currentStage === 'CREATED' ? 'PACKED' : currentStage === 'PACKED' ? 'IN_TRANSIT' : 'DELIVERED';
+                                  setLocalStages(prev => ({ ...prev, [c.id]: nextStage }));
+                                  try {
+                                    await updateCargoStage(c.id, nextStage);
+                                  } catch (err) {
+                                    await performLocalOperation('cargo', 'UPDATE_STAGE', {
+                                      cargo_id: c.id,
+                                      lifecycle_stage: nextStage
+                                    });
+                                  }
+                                }}
+                                className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] transition cursor-pointer"
+                              >
+                                {currentStage === 'IN_TRANSIT' ? 'Mark Delivered' : 'Advance'}
+                              </button>
+                            ) : (
+                              <span className="text-[10px] text-emerald-400 font-bold">Delivered</span>
+                            )}
+                            <button
+                              onClick={() => handleInspectCargo(c)}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] transition cursor-pointer"
+                            >
+                              Inspect
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

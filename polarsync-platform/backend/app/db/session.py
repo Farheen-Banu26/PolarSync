@@ -11,15 +11,23 @@ logger = logging.getLogger("polarsync.db")
 
 Base = declarative_base()
 
-# SQLAlchemy Engine setup (Optional for simulation mode)
+# SQLAlchemy Engine setup (Supports SQLite and PostgreSQL)
 if settings.DATABASE_URL:
     try:
+        is_sqlite = "sqlite" in settings.DATABASE_URL
+        connect_args = {"check_same_thread": False} if is_sqlite else {}
         engine = create_engine(
             settings.DATABASE_URL,
-            pool_pre_ping=True,
-            future=True
+            pool_pre_ping=not is_sqlite,
+            future=True,
+            connect_args=connect_args
         )
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        # Auto-create tables for local persistent storage
+        try:
+            Base.metadata.create_all(bind=engine)
+        except Exception as e:
+            logger.warning(f"Failed to auto-create database tables: {e}")
     except Exception as e:
         logger.warning(f"Failed to initialize database engine for {settings.DATABASE_URL}: {e}")
         engine = None
@@ -46,8 +54,8 @@ def get_db() -> Generator:
 
 def check_db_connection() -> dict:
     """
-    Health check utility to test PostgreSQL connectivity.
-    Returns status dict without crashing the server if DB is unreachable or unconfigured.
+    Health check utility to test database connectivity (SQLite or PostgreSQL).
+    Returns status dict without crashing the server if DB is unreachable.
     """
     if not engine:
         return {
@@ -59,7 +67,8 @@ def check_db_connection() -> dict:
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-        return {"status": "connected", "database": "postgresql"}
+        db_type = "sqlite" if "sqlite" in str(engine.url) else "postgresql"
+        return {"status": "connected", "database": db_type}
     except Exception as e:
-        logger.warning(f"Database connection check warning: {e}")
-        return {"status": "disconnected", "database": "postgresql", "detail": "PostgreSQL database offline or unreachable"}
+        logger.debug(f"Database connection check warning: {e}")
+        return {"status": "disconnected", "database": "postgresql", "detail": f"Database offline or unreachable: {str(e)}"}

@@ -8,8 +8,8 @@ import CacheIndicator from '../components/common/CacheIndicator';
 import RiskIndicator from '../components/intelligence/RiskIndicator';
 import ExplanationPanel from '../components/intelligence/ExplanationPanel';
 import { useScenario } from '../context/ScenarioContext';
-import { getEmergencies, getEmergencyIntelligence } from '../services/api';
-import { ShieldAlert, Award, Compass, CheckCircle2, AlertOctagon, Clock, LifeBuoy, Zap, BrainCircuit, Check, X } from 'lucide-react';
+import { getEmergencies, getEmergencyIntelligence, dispatchSarTeam, resolveEmergency, resetEmergency } from '../services/api';
+import { ShieldAlert, Award, Compass, CheckCircle2, AlertOctagon, Clock, LifeBuoy, Zap, BrainCircuit, Check, X, Send, RotateCcw } from 'lucide-react';
 
 export const EmergencyPage = () => {
   const { scenarioId, setScenarioId } = useScenario();
@@ -95,6 +95,44 @@ export const EmergencyPage = () => {
               <div className="flex items-center gap-2 font-mono">
                 <RiskIndicator level={emergency.severity} size="md" />
                 <StatusBadge status={emergency.status === 'RESOLVED' ? 'nominal' : 'critical'} label={emergency.status} size="sm" />
+                
+                <div className="flex items-center gap-2 ml-2">
+                  {emergency.status !== 'RESOLVED' ? (
+                    <>
+                      {emergency.status !== 'DISPATCHED' && (
+                        <button
+                          onClick={async () => {
+                            const vId = sar?.selected_vehicle_id || intelligence?.selected_asset_id || 'HELI-01';
+                            await dispatchSarTeam(emergency.id, vId);
+                            fetchEmergencyData(scenarioId);
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-sky-600/20 transition-all active:scale-95 cursor-pointer"
+                        >
+                          <Send className="w-3.5 h-3.5" /> Authorize SAR Dispatch
+                        </button>
+                      )}
+                      <button
+                        onClick={async () => {
+                          await resolveEmergency(emergency.id);
+                          fetchEmergencyData(scenarioId);
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Close Incident
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={async () => {
+                        await resetEmergency(emergency.id);
+                        fetchEmergencyData(scenarioId);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-400 font-bold text-xs flex items-center gap-1.5 border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" /> Reset Demo
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 

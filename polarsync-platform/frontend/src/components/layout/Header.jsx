@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useConnectivity } from '../../context/ConnectivityContext';
-import { User, Activity, Wifi, WifiOff, RefreshCw, Database } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { User, Shield, ChevronDown, Wifi, WifiOff, RefreshCw, Check } from 'lucide-react';
 
 export const Header = () => {
-  const { networkStatus, isOnline, pendingCount, syncNow } = useConnectivity();
+  const { networkStatus } = useConnectivity();
+  const { currentUser, availableRoles, switchRole } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const roles = availableRoles.length > 0 ? availableRoles : [
+    { username: 'commander', role: 'Expedition Commander', full_name: 'Dr. Rajesh Sharma', station: 'Maitri-II Main Station' },
+    { username: 'logistics', role: 'Logistics Officer', full_name: 'Lt. Col. Vikram Rao', station: 'Maitri-II Main Station' },
+    { username: 'safety', role: 'Medical/Safety Officer', full_name: 'Dr. Ananya Sen (MD)', station: 'Maitri-II Main Station' },
+    { username: 'operator', role: 'Field Operator', full_name: 'Suresh Patel', station: 'Camp Alpha (Schirmacher)' },
+    { username: 'admin', role: 'Administrator', full_name: 'Central Admin', station: 'NCPOR HQ (Goa)' },
+    { username: 'viewer', role: 'Viewer', full_name: 'Observer', station: 'Remote Observer' }
+  ];
 
   return (
-    <header className="h-16 bg-[#0b0f19] border-b border-slate-800/80 px-6 flex items-center justify-between shrink-0">
+    <header className="h-16 bg-[#0b0f19] border-b border-slate-800/80 px-6 flex items-center justify-between shrink-0 relative z-30">
       {/* Title & Subtitle */}
       <div>
         <div className="flex items-center gap-2.5">
@@ -57,19 +69,58 @@ export const Header = () => {
           </span>
         </div>
 
-        {/* User / Operator Header Profile */}
-        <div className="flex items-center gap-2.5 pl-3 border-l border-slate-800">
-          <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-sky-400">
-            <User className="w-4 h-4" />
-          </div>
-          <div className="hidden lg:block text-left">
-            <div className="text-xs font-semibold text-slate-200">
-              Expedition Cmdr
+        {/* Role Switcher Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex items-center gap-2.5 pl-3 pr-2 py-1.5 rounded-lg border border-slate-800 bg-slate-900/80 hover:bg-slate-800 transition-colors text-left font-mono"
+          >
+            <div className="w-7 h-7 rounded-full bg-sky-950 border border-sky-500/40 flex items-center justify-center text-sky-400">
+              <User className="w-3.5 h-3.5" />
             </div>
-            <div className="text-[10px] text-slate-400 font-mono">
-              Base Maitri-II
+            <div className="hidden lg:block">
+              <div className="text-xs font-semibold text-slate-100 flex items-center gap-1.5">
+                {currentUser?.role || 'Expedition Commander'}
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </div>
+              <div className="text-[10px] text-slate-400">
+                {currentUser?.full_name || 'Dr. Rajesh Sharma'}
+              </div>
             </div>
-          </div>
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-64 rounded-xl polar-glass border border-slate-700 shadow-2xl p-2 z-50 animate-fade-in font-mono text-xs">
+              <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800 mb-1 flex items-center gap-1.5">
+                <Shield className="w-3 h-3 text-sky-400" /> Switch Operational Role (RBAC)
+              </div>
+              <div className="space-y-1">
+                {roles.map((r) => {
+                  const isActive = currentUser?.username === r.username;
+                  return (
+                    <button
+                      key={r.username}
+                      onClick={() => {
+                        switchRole(r.username);
+                        setDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
+                        isActive
+                          ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                          : 'hover:bg-slate-800/80 text-slate-300'
+                      }`}
+                    >
+                      <div>
+                        <div className="font-bold">{r.role}</div>
+                        <div className="text-[10px] text-slate-400">{r.full_name}</div>
+                      </div>
+                      {isActive && <Check className="w-3.5 h-3.5 text-sky-400" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

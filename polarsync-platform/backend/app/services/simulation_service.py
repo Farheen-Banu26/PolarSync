@@ -368,7 +368,7 @@ class SimulationService:
                 "longitude": emergency.location[1],
                 "nearest_landmark": emergency.nearest_landmark,
                 "severity": emergency.severity.value,
-                "status": emergency.status.value,
+                "status": "DETECTED",
                 "affected_personnel_ids": emergency.affected_personnel_ids,
                 "affected_count": emergency.affected_count,
                 "required_capabilities": [c.value for c in emergency.required_capabilities],

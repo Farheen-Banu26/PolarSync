@@ -6,16 +6,21 @@ import LoadingState from '../components/common/LoadingState';
 import ErrorState from '../components/common/ErrorState';
 import CacheIndicator from '../components/common/CacheIndicator';
 import PolarMap from '../components/gis/PolarMap';
+import RoutePlannerModal from '../components/expedition/RoutePlannerModal';
 import { useScenario } from '../context/ScenarioContext';
-import { getScenarioSummary, getMapTopology, getCargo, getAssets } from '../services/api';
-import { Compass, MapPin, Route as RouteIcon, Shield, Clock, Truck, Package, Users } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { getScenarioSummary, getMapTopology, getCargo, getAssets, getPlannedRoutes } from '../services/api';
+import { Compass, MapPin, Route as RouteIcon, Shield, Clock, Truck, Package, Users, PlusCircle, CheckCircle2 } from 'lucide-react';
 
 export const ExpeditionPage = () => {
   const { scenarioId, setScenarioId } = useScenario();
+  const { currentUser } = useAuth();
   const [summary, setSummary] = useState(null);
   const [mapData, setMapData] = useState(null);
   const [cargoList, setCargoList] = useState([]);
   const [assetsList, setAssetsList] = useState([]);
+  const [plannedRoutes, setPlannedRoutes] = useState([]);
+  const [isPlannerOpen, setIsPlannerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,16 +28,18 @@ export const ExpeditionPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const [sumRes, mapRes, cargoRes, assetsRes] = await Promise.all([
+      const [sumRes, mapRes, cargoRes, assetsRes, plannedRes] = await Promise.all([
         getScenarioSummary(scId),
         getMapTopology(scId),
         getCargo(scId),
-        getAssets(scId)
+        getAssets(scId),
+        getPlannedRoutes().catch(() => [])
       ]);
       setSummary(sumRes);
       setMapData(mapRes);
       setCargoList(cargoRes.cargo || []);
       setAssetsList(assetsRes.assets || []);
+      setPlannedRoutes(Array.isArray(plannedRes) ? plannedRes : []);
     } catch (err) {
       setError(err.response?.data?.detail || err.message || 'Failed to load expedition planning data');
     } finally {
@@ -56,7 +63,15 @@ export const ExpeditionPage = () => {
           onSelectScenario={setScenarioId}
           disabled={loading}
         />
-        <CacheIndicator isCached={summary?._isCached} cachedAt={summary?._cachedAt} />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsPlannerOpen(true)}
+            className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg shadow-sky-600/20 transition-all active:scale-95"
+          >
+            <PlusCircle className="w-4 h-4" /> Plan Traverse Route
+          </button>
+          <CacheIndicator isCached={summary?._isCached} cachedAt={summary?._cachedAt} />
+        </div>
       </div>
 
       {loading ? (
@@ -72,11 +87,14 @@ export const ExpeditionPage = () => {
                 <h3 className="text-base font-bold font-mono text-slate-100">{summary?.name}</h3>
                 <p className="text-xs text-slate-400 mt-0.5">{summary?.description}</p>
               </div>
-              <StatusBadge
-                status={summary?.readiness_status === 'EXCELLENT' ? 'nominal' : 'warning'}
-                label={`READINESS: ${summary?.readiness_status}`}
-                size="sm"
-              />
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono text-slate-400">Commander: <strong className="text-sky-300">{currentUser?.full_name}</strong></span>
+                <StatusBadge
+                  status={summary?.readiness_status === 'EXCELLENT' ? 'nominal' : 'warning'}
+                  label={`READINESS: ${summary?.readiness_status}`}
+                  size="sm"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
@@ -145,9 +163,14 @@ export const ExpeditionPage = () => {
 
             {/* Traverse Routes & Waypoints */}
             <div className="polar-glass p-5 rounded-xl border border-slate-800">
-              <h3 className="text-sm font-bold font-mono text-sky-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <RouteIcon className="w-4 h-4" /> Traverse Corridors & Distance Matrix
-              </h3>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-sm font-bold font-mono text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                  <RouteIcon className="w-4 h-4" /> Traverse Corridors & Distance Matrix
+                </h3>
+                <span className="text-[10px] font-mono text-slate-400">
+                  {mapData?.routes?.length || 0} corridors
+                </span>
+              </div>
 
               <div className="space-y-4 font-mono text-xs">
                 <div className="space-y-2.5">
@@ -159,6 +182,19 @@ export const ExpeditionPage = () => {
                       </div>
                       <div className="text-[11px] text-slate-400 mt-1">
                         Corridor: {r.origin_id} → {r.destination_id} ({r.waypoints?.length || 0} Navigation Waypoints)
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Planned Custom Routes */}
+                  {plannedRoutes.map((pr) => (
+                    <div key={pr.id} className="p-3 rounded-lg bg-sky-950/30 border border-sky-500/30">
+                      <div className="flex justify-between items-center font-bold text-sky-200">
+                        <span>★ {pr.name}</span>
+                        <span className="text-emerald-400">{pr.distance_km} km ({pr.estimated_time_hours}h)</span>
+                      </div>
+                      <div className="text-[11px] text-slate-400 mt-1">
+                        Assigned Vehicle: <span className="text-slate-200">{pr.vehicle_id}</span> • Status: <span className="text-emerald-300 font-bold">{pr.status}</span>
                       </div>
                     </div>
                   ))}
@@ -240,6 +276,16 @@ export const ExpeditionPage = () => {
           </div>
         </div>
       )}
+
+      {/* Interactive Route Planner Modal */}
+      <RoutePlannerModal
+        isOpen={isPlannerOpen}
+        onClose={() => setIsPlannerOpen(false)}
+        locations={mapData?.locations || []}
+        assets={assetsList || []}
+        scenarioId={scenarioId}
+        onRouteSaved={() => fetchData(scenarioId)}
+      />
     </PageContainer>
   );
 };

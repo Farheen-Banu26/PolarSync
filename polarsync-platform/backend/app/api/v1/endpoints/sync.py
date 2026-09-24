@@ -1,9 +1,13 @@
 """
-Offline Synchronization Endpoints (Stage 3.4)
+Offline Synchronization Endpoints
+SIH Problem Statement: SIH26062
 """
 from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
 from app.schemas.sync import SyncRequest, SyncResponse, SyncResultItem
+from app.services.audit_service import audit_service
+from app.api.v1.endpoints.personnel import PERSONNEL_OVERRIDES
+from app.api.v1.endpoints.cargo import CARGO_OVERRIDES
 
 router = APIRouter()
 
@@ -28,7 +32,7 @@ SUPPORTED_RESOURCES = {
 def synchronize_operations(req: SyncRequest) -> SyncResponse:
     """
     Opportunistic Synchronization Endpoint for Field Operations.
-    Validates and reconciles queued offline client actions.
+    Validates, reconciles, updates active state, and logs audit trail for queued offline actions.
     """
     server_time = datetime.now(timezone.utc).isoformat()
     accepted_list = []
@@ -69,13 +73,45 @@ def synchronize_operations(req: SyncRequest) -> SyncResponse:
             ))
             continue
 
+        # Apply state mutation based on resource type
+        if res_key == "personnel":
+            p_id = op.payload.get("personnel_id")
+            new_st = op.payload.get("muster_status", "CHECKED_IN")
+            PERSONNEL_OVERRIDES[p_id] = {
+                "muster_status": new_st,
+                "comms_status": "ONLINE"
+            }
+            audit_service.log_action(
+                operator="Field Operator (Sync Queue)",
+                role="Field Operator",
+                action="OFFLINE_SYNC_PERSONNEL_CHECKIN",
+                entity_type="PERSONNEL",
+                entity_id=p_id,
+                details={"synced_op_id": op.id, "muster_status": new_st}
+            )
+
+        elif res_key == "cargo":
+            c_id = op.payload.get("cargo_id")
+            new_stage = op.payload.get("lifecycle_stage", "IN_TRANSIT")
+            CARGO_OVERRIDES[c_id] = {
+                "lifecycle_stage": new_stage
+            }
+            audit_service.log_action(
+                operator="Logistics Field Unit (Sync Queue)",
+                role="Logistics Officer",
+                action="OFFLINE_SYNC_CARGO_UPDATE",
+                entity_type="CARGO",
+                entity_id=c_id,
+                details={"synced_op_id": op.id, "lifecycle_stage": new_stage}
+            )
+
         # Accepted operation
         accepted_list.append(SyncResultItem(
             id=op.id,
             resource=op.resource,
             operation=op.operation,
             status="ACCEPTED",
-            message=f"Operation '{op.operation}' on {op.resource} validated and reconciled successfully."
+            message=f"Operation '{op.operation}' on {op.resource} validated and persisted to operational state."
         ))
 
     return SyncResponse(
